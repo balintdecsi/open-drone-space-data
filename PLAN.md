@@ -29,11 +29,19 @@ Daily data stays in the private app.
    corrected or erased, unlike the app's tables. The public build drops `operator`,
    `operatorAddress`, `phones` and `emails`. The embed can link to the official register
    instead. The zone GeoJSON is already clean: it only carries `register_id`.
-4. **The OFM licence is unresolved.** The manifest says "free for non-commercial use".
-   openflightmaps.org/about says the opposite: commercial use is allowed, attribution is
-   required, and users must report errors and give their end users a way to report errors.
-   The full licence text wasn't found (the package `readme.pdf` only points to the website).
-   This decides whether `airspaces`/`aerodromes` can be published, so it's Phase 0.
+4. **The OFM licence is only partly settled.** <https://openflightmaps.org/about/> (checked
+   2026-09-28) summarises the General Users' License:
+   - use is free of charge, commercial use included;
+   - open flightmaps must always be attributed as the source;
+   - users must report data errors to OFMA, and an application must let its own users report
+     errors and corrections;
+   - the data is not certified and must never be a primary source for navigation.
+
+   The private app's "non-commercial" wording was wrong and has been corrected there. The
+   page doesn't link the full licence text, so three things are still open: redistributing the
+   derived GeoJSON publicly (repo, npm), which licence that derived data carries, and whether
+   OFMA's duties pass on to downstream users. This decides whether `airspaces`/`aerodromes`
+   can be published, so it's Phase 0.
 5. **The embed must stay honest.** A map that shows only static layers looks like "all clear"
    on days with active TRAs or eseti légterek. The freshness invariant has to carry over: the
    embed says in a fixed banner that daily activations are not shown, and links to
@@ -48,7 +56,7 @@ Daily data stays in the private app.
 | `protected-zones` | rare | 4/1998 + Parliamentary Guard notice | ✅ |
 | `rmz-tmz` | AIRAC | eAIP ENR 2.2 transcription (12 features) | ✅ low risk; HungaroControl reuse terms not verified, attribute |
 | `terrain-grid` | once | Copernicus GLO-90, redistribution allowed with notice | ✅ carry the notice |
-| `airspaces`, `aerodromes`, drop zones | AIRAC | OFM OFMX | ⚠️ publish once Phase 0 confirms; attribution + error-report path |
+| `airspaces`, `aerodromes`, drop zones | AIRAC | OFM General Users' License (commercial use OK, attribution, error reporting) | ⚠️ publish once OFMA confirms redistribution; keeps the OFM licence, no CC-BY |
 | `tables/aerodromes` | register edition | CAA register | ⚠️ publish **without** operator/address/phones/emails |
 | `tables/restricted-areas` | rare | aviation authority list (organisations only) | ✅ |
 | `tables/nature-areas` | AIRAC | from OFM airspaces | ✅ (follows OFM verdict) |
@@ -59,10 +67,11 @@ Daily data stays in the private app.
 
 ## Plan
 
-### Phase 0 — Legal groundwork (before any public commit)
-- Get the full **OFM Data User License**: check the download page of the LH package, or e-mail
-  OFMA and ask directly whether derived GeoJSON can be redistributed in a public repo. Fix the
-  licence string in `scripts/ingest/parse-ofmx.mjs` / manifest in the private repo.
+### Phase 0 — Legal groundwork (before any code or data is committed)
+- [x] Fix the OFM licence string in the private app (`parse-ofmx.mjs`, manifest, DATA_SOURCES).
+- [ ] E-mail info@openflightmaps.org for the full General Users' License text and written
+  confirmation of the three open points above. Until then the OFM layers stay out of this repo.
+- [ ] Add an error-report path to the private app as well: the licence applies to it today.
 - **Licences (decided: permissive + credit to the author):**
   - Code: **Apache-2.0** with a `NOTICE` file ("Open Drone Space — © Bálint Decsi,
     github.com/balintdecsi/…"). Apache §4(d) requires redistributors to carry the NOTICE along.
